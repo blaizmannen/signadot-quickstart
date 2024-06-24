@@ -2,6 +2,7 @@
 - Kind
 - kubectl
 - helm
+- Signadot Chrome Extension (https://chromewebstore.google.com/detail/signadot/aigejiccjejdeiikegdjlofgcjhhnkim?hl=en)
 
 ## Bootstrap
 ```
