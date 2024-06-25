@@ -1,0 +1,13 @@
+name: negative-eta-fix
+spec:
+  description: Fix negative ETA in Route Service
+  cluster: signadot-quickstart
+  forks:
+    - forkOf:
+        kind: Deployment
+        namespace: hotrod
+        name: route
+      customizations:
+        images:
+          - image: signadot/hotrod:quickstart-v2-fix
+            container: hotrod

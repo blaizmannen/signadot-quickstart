@@ -12,21 +12,26 @@ up:
 	istioctl operator init
 	istioctl install -y
 	kubectl label namespace default istio-injection=enabled | true
-	# Signadot
-	kubectl create ns signadot | true
-	kubectl -n signadot create secret generic cluster-agent --from-literal=token='V9pIfCmwZHJt5Co5amTILV0DN_Auxn3HG4-D7s9_gYE' | true
-	helm repo add signadot https://charts.signadot.com
-	helm install signadot-operator signadot/operator --set istio.enabled=true --wait --timeout 300s | true
-	# Hotrod (test app)
-	kubectl create ns hotrod | true
-	kubectl label namespace hotrod istio-injection=enabled | true
-	kubectl -n hotrod apply -k 'https://github.com/signadot/hotrod/k8s/overlays/prod/istio'
 	# Addons
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.22/samples/addons/grafana.yaml
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.22/samples/addons/prometheus.yaml
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.22/samples/addons/kiali.yaml
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 	helm install -n kube-system metrics-server metrics-server/metrics-server --set args={--kubelet-insecure-tls} | true
+
+signadot:
+	# Signadot
+	kubectl create ns signadot | true
+	kubectl -n signadot delete secret cluster-agent | true
+	kubectl -n signadot create secret generic cluster-agent --from-file=token=./token.txt | true
+	helm repo add signadot https://charts.signadot.com
+	helm install signadot-operator signadot/operator --set istio.enabled=true --wait --timeout 300s | true
+	# Hotrod (test app)
+	kubectl create ns hotrod | true
+	kubectl label namespace hotrod istio-injection=enabled | true
+	kubectl -n hotrod apply -k 'https://github.com/signadot/hotrod/k8s/overlays/prod/istio'
+	# Sandbox
+	signadot sandbox apply -f ./negative-eta-fix.yaml --set cluster=$(KIND_CLUSTER_NAME)
 
 down:
 	@kind delete cluster --name $(KIND_CLUSTER_NAME)
