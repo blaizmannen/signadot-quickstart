@@ -1,6 +1,6 @@
 # Makefile for managing Kind Kubernetes cluster
 
-KIND_CLUSTER_NAME = signadot-quickstart
+KIND_CLUSTER_NAME = john-cluster
 KIND_CONFIG_FILE = kind-config.yaml
 
 .PHONY: up down

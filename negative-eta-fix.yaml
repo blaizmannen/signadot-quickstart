@@ -1,7 +1,7 @@
 name: negative-eta-fix
 spec:
   description: Fix negative ETA in Route Service
-  cluster: signadot-quickstart
+  cluster: john-cluster
   forks:
     - forkOf:
         kind: Deployment
